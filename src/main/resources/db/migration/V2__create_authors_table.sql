@@ -1,0 +1,12 @@
+CREATE TABLE authors (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    birthdate DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON authors
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();

@@ -3,6 +3,7 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id "org.jooq.jooq-codegen-gradle" version '3.19.16'
 }
 
 group = 'com.example'
@@ -25,12 +26,41 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	jooqCodegen 'org.postgresql:postgresql'
+}
+
+sourceSets.main {
+	java.srcDirs("build/generated-sources/jooq")
+}
+
+jooq {
+	configuration {
+		jdbc {
+			driver = "org.postgresql.Driver"
+			url = "jdbc:postgresql://localhost:5432/library"
+			user = "user"
+			password = "password"
+		}
+		generator {
+			database {
+				name = 'org.jooq.meta.postgres.PostgresDatabase'
+				includes = '.*'
+				excludes = 'flyway_schema_history'
+				inputSchema = "public"
+			}
+			generate {}
+			target {
+				packageName = "com.example.library.db"
+			}
+		}
+	}
 }
 
 kotlin {

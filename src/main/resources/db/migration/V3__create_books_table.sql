@@ -1,0 +1,13 @@
+CREATE TABLE books (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    price INTEGER NOT NULL CHECK (price >= 0),
+    is_published BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON books
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();

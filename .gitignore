@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### JOOQ ###
+/src/main/kotlin/com/example/library/db
